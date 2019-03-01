@@ -12,6 +12,9 @@ Sofort Pay GoLang client
 * [Sofort Pay](https://sofort-pay.com/)
 * [Sofort Pay Swagger](https://api.sofort-pay.com/api/v1/payments/swagger.json)
 
+[license-link]: https://github.com/zhooravell/sofort-pay-php-client/blob/master/LICENSE
+[license-image]: https://img.shields.io/dub/l/vibe-d.svg
+
 [travis-link]: https://travis-ci.com/zhooravell/sofort-pay-go-client
 [travis-image]: https://travis-ci.com/zhooravell/sofort-pay-go-client.svg?branch=master
 
