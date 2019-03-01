@@ -224,6 +224,22 @@ func TestClient_InitializePayment(t *testing.T) {
 	}
 }
 
+func TestClient_InitializePaymentInvalidCurrency(t *testing.T) {
+	client := newClient(server.Client(), baseUrl, APIKey(apiKey))
+
+	p := NewInitializePayment("test", 10.50, "123")
+
+	transaction, err := client.InitializePayment(p)
+
+	if err == nil {
+		t.Fail()
+	}
+
+	if transaction != nil {
+		t.Fail()
+	}
+}
+
 func TestClient_InitializePaymentUnauthorized(t *testing.T) {
 	client := newClient(server.Client(), baseUrl, APIKey("d5c0c073-992d-4128-9c5c-491fd56cf74f"))
 
@@ -261,5 +277,64 @@ func TestNewSofortPayClient(t *testing.T) {
 
 	if err != nil {
 		t.Error(err)
+	}
+}
+
+func TestClient_InitializePaymentRequestError(t *testing.T) {
+	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
+	bu, _ := url.Parse(s.URL)
+
+	client := newClient(s.Client(), bu, APIKey("d5c0c073-992d-4128-9c5c-491fd56cf74f"))
+
+	s.Close()
+
+	p := NewInitializePayment("EUR", 10.50, "123")
+
+	transaction, err := client.InitializePayment(p)
+
+	if transaction != nil {
+		t.Fail()
+	}
+
+	if err == nil {
+		t.Fail()
+	}
+}
+
+func TestClient_GetPaymentRequestError(t *testing.T) {
+	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
+	bu, _ := url.Parse(s.URL)
+
+	client := newClient(s.Client(), bu, APIKey("d5c0c073-992d-4128-9c5c-491fd56cf74f"))
+
+	s.Close()
+
+	transactionUUID, _ := uuid.Parse(transactionIDToGet)
+
+	transaction, err := client.GetPayment(transactionUUID)
+
+	if transaction != nil {
+		t.Fail()
+	}
+
+	if err == nil {
+		t.Fail()
+	}
+}
+
+func TestClient_DeletePaymentRequestError(t *testing.T) {
+	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
+	bu, _ := url.Parse(s.URL)
+
+	client := newClient(s.Client(), bu, APIKey("d5c0c073-992d-4128-9c5c-491fd56cf74f"))
+
+	s.Close()
+
+	transactionUUID, _ := uuid.Parse(transactionIDToDelete)
+
+	err := client.DeletePayment(transactionUUID)
+
+	if err == nil {
+		t.Fail()
 	}
 }

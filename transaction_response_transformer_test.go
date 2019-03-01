@@ -185,7 +185,7 @@ func TestPrepareTransactionInvalidSuccessUrl(t *testing.T) {
     "city": "string",
     "zip": "string"
   },
-  "uuid": "123",
+  "uuid": "d871afc2-c227-4c8a-a28a-eaa97dbbd254",
   "status": "PENDING",
   "testmode": false
 }`
@@ -241,7 +241,7 @@ func TestPrepareTransactionInvalidAbortUrl(t *testing.T) {
     "city": "string",
     "zip": "string"
   },
-  "uuid": "123",
+  "uuid": "d871afc2-c227-4c8a-a28a-eaa97dbbd254",
   "status": "PENDING",
   "testmode": false
 }`
@@ -297,7 +297,7 @@ func TestPrepareTransactionInvalidWebhookUrl(t *testing.T) {
     "city": "string",
     "zip": "string"
   },
-  "uuid": "123",
+  "uuid": "d871afc2-c227-4c8a-a28a-eaa97dbbd254",
   "status": "PENDING",
   "testmode": false
 }`
