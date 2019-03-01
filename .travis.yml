@@ -1,0 +1,17 @@
+language: go
+
+go:
+  - "1.9"
+  - "1.10.x"
+
+os:
+  - linux
+
+install:
+  - go get -t -v ./...
+
+script:
+  - go test -race -coverprofile=coverage.txt -covermode=atomic
+
+notifications:
+  email: false
