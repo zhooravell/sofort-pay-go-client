@@ -2,6 +2,9 @@ Sofort Pay GoLang client
 =====================
 > Sofort Pay api GoLang wrapper.
 
+[![License][license-image]][license-link] [![Build Status][travis-image]][travis-link] [![codecov][codecov-image]][codecov-link]
+
+
 ![](https://wizard.sofort-pay.com/images/logo.svg)
 
 ## Source(s)
