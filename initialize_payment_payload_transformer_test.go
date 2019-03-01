@@ -8,9 +8,13 @@ import (
 func TestPrepareInitializePaymentPayload(t *testing.T) {
 	p := NewInitializePayment("eur", 10.50, "123")
 
-	webhookURL, _ := url.Parse("https://example.com/webhook")
+	successURL, _ := url.Parse("https://example.com/1")
+	abortURL, _ := url.Parse("https://example.com/2")
+	webhookURL, _ := url.Parse("https://example.com/3")
 
 	p.SetWebhookURL(webhookURL)
+	p.SetSuccessURL(successURL)
+	p.SetAbortURL(abortURL)
 	p.SetLanguage("de")
 
 	pp, err := prepareInitializePaymentPayload(p)
@@ -35,15 +39,15 @@ func TestPrepareInitializePaymentPayload(t *testing.T) {
 		t.Fail()
 	}
 
-	if pp.SuccessURL != "" {
+	if pp.WebhookURL != "https://example.com/3" {
 		t.Fail()
 	}
 
-	if pp.AbortURL != "" {
+	if pp.AbortURL != "https://example.com/2" {
 		t.Fail()
 	}
 
-	if pp.WebhookURL != "https://example.com/webhook" {
+	if pp.SuccessURL != "https://example.com/1" {
 		t.Fail()
 	}
 

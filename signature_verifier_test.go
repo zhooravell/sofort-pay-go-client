@@ -87,3 +87,42 @@ func TestSignatureVerifier_VerifyFail(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestSignatureVerifier_VerifyFailWrongVersion(t *testing.T) {
+	sv := signatureVerifier{
+		sharedSecret: "test",
+	}
+
+	xPayloadSignature := "v33=b95ac0a6fbb0f868eb2e66fafbc79bc1e31995b0773b78de515c9c1dc5d7038a"
+
+	payload := ""
+	if err := sv.Verify(xPayloadSignature, []byte(payload)); err == nil {
+		t.Fail()
+	}
+}
+
+func TestSignatureVerifier_VerifyFailInvalidHeaderData(t *testing.T) {
+	sv := signatureVerifier{
+		sharedSecret: "test",
+	}
+
+	xPayloadSignature := "test"
+
+	payload := ""
+	if err := sv.Verify(xPayloadSignature, []byte(payload)); err == nil {
+		t.Fail()
+	}
+}
+
+func TestSignatureVerifier_VerifyFailInvalidHeaderData2(t *testing.T) {
+	sv := signatureVerifier{
+		sharedSecret: "test",
+	}
+
+	xPayloadSignature := "v1="
+
+	payload := ""
+	if err := sv.Verify(xPayloadSignature, []byte(payload)); err == nil {
+		t.Fail()
+	}
+}

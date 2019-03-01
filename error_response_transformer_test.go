@@ -29,6 +29,28 @@ func TestPrepareError(t *testing.T) {
 	}
 }
 
+func TestPrepareErrorFail(t *testing.T) {
+	j := "Bad Request"
+
+	b := ioutil.NopCloser(bytes.NewReader([]byte(j)))
+	defer b.Close()
+
+	r := &http.Response{
+		StatusCode: 200,
+		Body:       b,
+	}
+
+	err := prepareError(r)
+
+	if err == nil {
+		t.Fail()
+	}
+
+	if err.Error() == "Bad Request" {
+		t.Fail()
+	}
+}
+
 func BenchmarkPrepareError(b *testing.B) {
 	j := `{"code":400,"message":"Bad Request"}`
 

@@ -43,6 +43,18 @@ func TestNewInitializePaymentInvalidReference(t *testing.T) {
 	}
 }
 
+func TestNewInitializePaymentInvalidLang(t *testing.T) {
+	p := NewInitializePayment("EUR", 10.50, "123")
+
+	p.SetLanguage("test")
+
+	err := p.Valid()
+
+	if err != nil && err.Error() != "The language of your payment should bee from ISO 639-1" {
+		t.Error(err)
+	}
+}
+
 func TestNewInitializePaymentInvalidMeta(t *testing.T) {
 	p := NewInitializePayment("EUR", 10.50, "123")
 

@@ -153,6 +153,174 @@ func TestPrepareTransactionInvalidUUID(t *testing.T) {
 	}
 }
 
+func TestPrepareTransactionInvalidSuccessUrl(t *testing.T) {
+	j := `{
+  "amount": 10.5,
+  "currency_id": "EUR",
+  "purpose": "Order ID: 1234",
+  "metadata": {
+    "key1": "value1",
+    "key2": "value2",
+    "key3": "value3"
+  },
+  "language": "de",
+  "sender": {
+    "holder": "John Doe",
+    "iban": "DE04888888880087654321",
+    "bic": "TESTDE88XXX",
+    "bank_name": "Test Bank",
+    "country_id": "DE"
+  },
+  "success_url": "[192:168:26:2::3]:1900",
+  "abort_url": "https://example.com/abort",
+  "webhook_url": "https://example.com/webhook",
+  "payform_code": "default",
+  "recipient": {
+    "holder": "John Doe",
+    "iban": "DE04888888880087654321",
+    "bic": "TESTDE88XXX",
+    "bank_name": "Test Bank",
+    "country_id": "DE",
+    "street": "string",
+    "city": "string",
+    "zip": "string"
+  },
+  "uuid": "123",
+  "status": "PENDING",
+  "testmode": false
+}`
+
+	b := ioutil.NopCloser(bytes.NewReader([]byte(j)))
+	defer b.Close()
+
+	r := &http.Response{
+		StatusCode: 200,
+		Body:       b,
+	}
+
+	transaction, err := prepareTransaction(r)
+
+	if err == nil {
+		t.Fail()
+	}
+
+	if transaction != nil {
+		t.Fail()
+	}
+}
+
+func TestPrepareTransactionInvalidAbortUrl(t *testing.T) {
+	j := `{
+  "amount": 10.5,
+  "currency_id": "EUR",
+  "purpose": "Order ID: 1234",
+  "metadata": {
+    "key1": "value1",
+    "key2": "value2",
+    "key3": "value3"
+  },
+  "language": "de",
+  "sender": {
+    "holder": "John Doe",
+    "iban": "DE04888888880087654321",
+    "bic": "TESTDE88XXX",
+    "bank_name": "Test Bank",
+    "country_id": "DE"
+  },
+  "success_url": "https://example.com",
+  "abort_url": "[192:168:26:2::3]:1900",
+  "webhook_url": "https://example.com/webhook",
+  "payform_code": "default",
+  "recipient": {
+    "holder": "John Doe",
+    "iban": "DE04888888880087654321",
+    "bic": "TESTDE88XXX",
+    "bank_name": "Test Bank",
+    "country_id": "DE",
+    "street": "string",
+    "city": "string",
+    "zip": "string"
+  },
+  "uuid": "123",
+  "status": "PENDING",
+  "testmode": false
+}`
+
+	b := ioutil.NopCloser(bytes.NewReader([]byte(j)))
+	defer b.Close()
+
+	r := &http.Response{
+		StatusCode: 200,
+		Body:       b,
+	}
+
+	transaction, err := prepareTransaction(r)
+
+	if err == nil {
+		t.Fail()
+	}
+
+	if transaction != nil {
+		t.Fail()
+	}
+}
+
+func TestPrepareTransactionInvalidWebhookUrl(t *testing.T) {
+	j := `{
+  "amount": 10.5,
+  "currency_id": "EUR",
+  "purpose": "Order ID: 1234",
+  "metadata": {
+    "key1": "value1",
+    "key2": "value2",
+    "key3": "value3"
+  },
+  "language": "de",
+  "sender": {
+    "holder": "John Doe",
+    "iban": "DE04888888880087654321",
+    "bic": "TESTDE88XXX",
+    "bank_name": "Test Bank",
+    "country_id": "DE"
+  },
+  "success_url": "https://example.com",
+  "abort_url": "https://example.com",
+  "webhook_url": "[192:168:26:2::3]:1900",
+  "payform_code": "default",
+  "recipient": {
+    "holder": "John Doe",
+    "iban": "DE04888888880087654321",
+    "bic": "TESTDE88XXX",
+    "bank_name": "Test Bank",
+    "country_id": "DE",
+    "street": "string",
+    "city": "string",
+    "zip": "string"
+  },
+  "uuid": "123",
+  "status": "PENDING",
+  "testmode": false
+}`
+
+	b := ioutil.NopCloser(bytes.NewReader([]byte(j)))
+	defer b.Close()
+
+	r := &http.Response{
+		StatusCode: 200,
+		Body:       b,
+	}
+
+	transaction, err := prepareTransaction(r)
+
+	if err == nil {
+		t.Fail()
+	}
+
+	if transaction != nil {
+		t.Fail()
+	}
+}
+
 func BenchmarkPrepareTransaction(b *testing.B) {
 	j := `{
   "amount": 10.5,

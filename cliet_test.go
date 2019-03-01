@@ -239,3 +239,27 @@ func TestClient_InitializePaymentUnauthorized(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestNewSofortPayClientInvalidAPIKey(t *testing.T) {
+	client, err := NewSofortPayClient(server.Client(), APIKey("test"))
+
+	if client != nil {
+		t.Fail()
+	}
+
+	if err == nil || err.Error() != "api key should be valid UUID: invalid UUID length: 4" {
+		t.Fail()
+	}
+}
+
+func TestNewSofortPayClient(t *testing.T) {
+	client, err := NewSofortPayClient(server.Client(), APIKey("d5c0c073-992d-4128-9c5c-491fd56cf74f"))
+
+	if client == nil {
+		t.Fail()
+	}
+
+	if err != nil {
+		t.Error(err)
+	}
+}
