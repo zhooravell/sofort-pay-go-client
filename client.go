@@ -2,6 +2,7 @@ package sofortpay
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -18,9 +19,9 @@ const sofortPayBaseUrl = "https://api.sofort-pay.com"
 //
 // https://manage.sofort-pay.com/merchant/documentation/payments/api/payment
 type Client interface {
-	InitializePayment(p *InitializePayment) (*Transaction, error)
-	GetPayment(uuid uuid.UUID) (*Transaction, error)
-	DeletePayment(uuid uuid.UUID) error
+	InitializePayment(ctx context.Context, p *InitializePayment) (*Transaction, error)
+	GetPayment(ctx context.Context, uuid uuid.UUID) (*Transaction, error)
+	DeletePayment(ctx context.Context, uuid uuid.UUID) error
 }
 
 // SofortPay HTTP Client constructor (public)
@@ -55,14 +56,14 @@ func newClient(httpClient *http.Client, baseUrl *url.URL, apiKey APIKey) *client
 }
 
 // Initialize a payment
-func (rcv *client) InitializePayment(p *InitializePayment) (*Transaction, error) {
+func (rcv *client) InitializePayment(ctx context.Context, p *InitializePayment) (*Transaction, error) {
 	payload, err := prepareInitializePaymentPayload(p)
 
 	if err != nil {
 		return nil, err
 	}
 
-	r, err := rcv.newRequest("POST", "/api/v1/payments", payload)
+	r, err := rcv.newRequest(ctx, "POST", "/api/v1/payments", payload)
 
 	if err != nil {
 		return nil, err
@@ -82,8 +83,8 @@ func (rcv *client) InitializePayment(p *InitializePayment) (*Transaction, error)
 }
 
 // Return Payment Transaction Object
-func (rcv *client) GetPayment(uuid uuid.UUID) (*Transaction, error) {
-	r, err := rcv.newRequest("GET", fmt.Sprintf("/api/v1/payments/%s", uuid), nil)
+func (rcv *client) GetPayment(ctx context.Context, uuid uuid.UUID) (*Transaction, error) {
+	r, err := rcv.newRequest(ctx, "GET", fmt.Sprintf("/api/v1/payments/%s", uuid), nil)
 
 	if err != nil {
 		return nil, err
@@ -103,8 +104,8 @@ func (rcv *client) GetPayment(uuid uuid.UUID) (*Transaction, error) {
 }
 
 // Delete a Payment Transaction Object
-func (rcv *client) DeletePayment(uuid uuid.UUID) error {
-	r, err := rcv.newRequest("DELETE", fmt.Sprintf("/api/v1/payments/%s", uuid), nil)
+func (rcv *client) DeletePayment(ctx context.Context, uuid uuid.UUID) error {
+	r, err := rcv.newRequest(ctx, "DELETE", fmt.Sprintf("/api/v1/payments/%s", uuid), nil)
 
 	if err != nil {
 		return err
@@ -124,7 +125,7 @@ func (rcv *client) DeletePayment(uuid uuid.UUID) error {
 }
 
 // Prepare request
-func (rcv *client) newRequest(method string, path string, body interface{}) (*http.Request, error) {
+func (rcv *client) newRequest(ctx context.Context, method string, path string, body interface{}) (*http.Request, error) {
 	u := rcv.baseURL.ResolveReference(&url.URL{Path: path})
 	var buf io.ReadWriter
 
@@ -140,6 +141,8 @@ func (rcv *client) newRequest(method string, path string, body interface{}) (*ht
 	if err != nil {
 		return nil, err
 	}
+
+	r = r.WithContext(ctx)
 
 	if body != nil {
 		r.Header.Set("Content-Type", "application/json")
