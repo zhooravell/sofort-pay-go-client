@@ -142,7 +142,9 @@ func (rcv *client) newRequest(ctx context.Context, method string, path string, b
 		return nil, err
 	}
 
-	r = r.WithContext(ctx)
+	if ctx != nil {
+		r = r.WithContext(ctx)
+	}
 
 	if body != nil {
 		r.Header.Set("Content-Type", "application/json")
